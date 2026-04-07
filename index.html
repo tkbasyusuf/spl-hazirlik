@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1117">
+<title>SPL Düzey 1 — Hazırlık Planı</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg-primary:#0D1117;--bg-secondary:#161B22;--bg-card:rgba(30,38,50,0.92);--border-subtle:rgba(255,255,255,0.06);--text-primary:#F0F6FC;--text-secondary:#C9D1D9;--text-muted:#8B949E;--text-dim:#484F58;--gold:#E8A838;--blue:#4A9BD9;--green:#6ABF69;--red:#D95B6A;--purple:#9B6FD9;--orange:#E86A3A}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans','Segoe UI',sans-serif;background:linear-gradient(145deg,var(--bg-primary) 0%,var(--bg-secondary) 50%,var(--bg-primary) 100%);color:var(--text-secondary);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before,body::after{content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+  body::before{top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(78,130,200,0.08) 0%,transparent 70%)}
+  body::after{bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(232,168,56,0.06) 0%,transparent 70%)}
+  .shell{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:24px 16px}
+  .header{text-align:center;margin-bottom:32px;animation:slideDown .6s cubic-bezier(.16,1,.3,1) both}
+  .header__badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+  .header h1{font-size:clamp(26px,5vw,42px);font-weight:700;color:var(--text-primary);letter-spacing:-1px;line-height:1.1;margin-bottom:6px}
+  .header p{font-size:14px;color:var(--text-muted)}
+  .card{background:linear-gradient(135deg,var(--bg-card),rgba(22,27,34,0.95));border:1px solid var(--border-subtle);border-radius:16px;padding:22px;backdrop-filter:blur(10px);margin-bottom:20px;animation:fadeUp .55s cubic-bezier(.16,1,.3,1) both}
+  .card--accent{border-left:4px solid var(--accent,var(--blue))}
+  .prog-track{width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.16,1,.3,1)}
+  .prog-fill--rainbow{background:linear-gradient(90deg,var(--red),var(--green),var(--blue),var(--gold))}
+  .blocks{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+  .block-box{background:rgba(255,255,255,0.03);border-radius:10px;padding:12px 10px;text-align:center;border:1px solid transparent;cursor:pointer;transition:all .2s}
+  .block-box:hover{background:rgba(255,255,255,0.06)}
+  .block-box.active{border-width:2px}
+  .block-box__icon{font-size:20px;margin-bottom:2px}
+  .block-box__label{font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:4px}
+  .block-box__val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
+  .tabs{display:flex;gap:4px;margin-bottom:18px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;border:1px solid var(--border-subtle)}
+  .tab-btn{flex:1;padding:10px 6px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;background:transparent;color:var(--text-muted);transition:all .2s}
+  .tab-btn.active{background:rgba(78,130,200,0.15);color:var(--text-primary)}
+  .week-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:18px}
+  .week-pill{border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);border-radius:8px;padding:8px 2px;cursor:pointer;text-align:center;transition:all .2s}
+  .week-pill.active{border-width:2px}
+  .week-pill__num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:block}
+  .week-pill__bar{width:100%;height:3px;border-radius:2px;margin-top:3px}
+  .topic-btn{display:flex;align-items:center;gap:12px;width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;transition:all .2s;margin-bottom:6px;font-family:inherit}
+  .topic-btn.done{border-color:rgba(255,255,255,0.08)}
+  .topic-btn__check{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.15);font-size:13px;font-weight:700;color:var(--bg-primary);transition:all .2s}
+  .topic-btn.done .topic-btn__check{border:none}
+  .topic-btn__text{font-size:14px;font-weight:500;line-height:1.4;color:var(--text-secondary);transition:all .2s}
+  .topic-btn.done .topic-btn__text{color:var(--text-muted);text-decoration:line-through}
+  .tip-box{border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;margin-top:16px}
+  .tip-box span{font-size:13px;line-height:1.5;color:var(--text-secondary)}
+  .subj-card{margin-bottom:12px}
+  .subj-card__head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .subj-card__icon{font-size:24px}
+  .subj-card__name{font-size:16px;font-weight:700;color:var(--text-primary)}
+  .subj-card__meta{font-size:12px;color:var(--text-muted)}
+  .subj-topics{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+  .subj-topic{font-size:12px;color:var(--text-muted);padding:6px 10px;background:rgba(255,255,255,0.03);border-radius:6px}
+  .rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .rule-box{background:rgba(255,255,255,0.04);border-radius:8px;padding:10px 12px}
+  .rule-box__label{font-size:11px;color:var(--text-muted);margin-bottom:2px}
+  .rule-box__val{font-size:14px;font-weight:700;color:var(--text-primary);font-family:'JetBrains Mono',monospace}
+  .res-row{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--bg-card),rgba(22,27,34,0.95));border:1px solid var(--border-subtle);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+  .res-row__name{font-size:15px;font-weight:600;color:var(--text-primary)}
+  .res-row__url{font-size:12px;color:var(--text-muted);margin-top:2px}
+  .res-badge{font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:20px;white-space:nowrap}
+  .step-row{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:8px}
+  .step-num{width:24px;height:24px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--gold),var(--red));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg-primary)}
+  .step-text{font-size:13px;color:var(--text-secondary);line-height:1.5}
+  .time-badges{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+  .time-badge{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--text-muted)}
+  .time-badge strong{color:var(--text-secondary)}
+  .exam-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:14px}
+  .footer{text-align:center;margin-top:32px;padding-bottom:20px;font-size:12px;color:var(--text-dim)}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:520px){.week-grid{grid-template-columns:repeat(6,1fr)}.subj-topics{grid-template-columns:1fr}.blocks{grid-template-columns:repeat(2,1fr)}.rules-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell" id="app"></div>
+<script>
+const WEEKS=[
+{week:1,block:1,phase:"KONU ÇALIŞMA",subject:"Takas, Saklama ve Operasyon",color:"#D95B6A",examWeek:false,topics:["Takas ve saklama temel kavramları","MKK yapısı, kuruluş ve işleyişi","Kaydileştirme sistemi (Tebliğ II-13.1)","Merkezi Takas Yönetmelikleri (4-5-6. bölümler)","Merkezi Karşı Taraf (CCP) kavramı","Portföy Saklama Tebliği (III-56.1)"],dailyH:1,weekendH:3,tip:"Kaydileştirme = fiziki senet yok, elektronik kayıt var. MKK'nın rolünü iyi kavra."},
+{week:2,block:1,phase:"KONU ÇALIŞMA",subject:"Takas, Saklama ve Operasyon",color:"#D95B6A",examWeek:false,topics:["Pay piyasasında takas süreci (T+2)","Borçlanma araçlarında transfer/takas/temerrüt","Türev araçlarda takas, uzlaşma ve fiziki teslim","Takasbank teminat yönetimi","Temerrüt halleri ve yaptırımlar","İlk deneme sınavı çöz + hata analizi"],dailyH:1,weekendH:3,tip:"Temerrüt sürelerini ve T+2 takas sürecini mutlaka ezberle."},
+{week:3,block:1,phase:"DENEME + SINAV",subject:"Takas, Saklama ve Operasyon",color:"#D95B6A",examWeek:true,topics:["Özet kartları gözden geçir","Günde 2 deneme sınavı çöz","Çıkmış sınav sorularını çöz","Her denemeden sonra hata analizi","Zayıf konulara geri dön, tekrar et","📝 HAFTA SONU: SINAVA GİR"],dailyH:2,weekendH:4,tip:"Son hafta yeni konu yükleme! Sadece tekrar + deneme. Sınavdan 1 gün önce hafif tekrar + dinlen."},
+{week:4,block:2,phase:"KONU ÇALIŞMA",subject:"Yatırım Kuruluşları",color:"#6ABF69",examWeek:false,topics:["Yatırım hizmetleri ve faaliyetleri (Tebliğ III-37.1)","Yatırım kuruluşu türleri (aracı kurum vs banka)","Faaliyet izinleri ve şartları","Müşteri sınıflandırması (profesyonel / genel müşteri)","Uygunluk ve yerindelik testi","Yatırım kuruluşları kuruluş/faaliyet esasları (III-39.1)"],dailyH:1,weekendH:3,tip:"Profesyonel müşteri parasal eşiklerini ezberle — 2026 güncel tutarlarını SPL sitesinden kontrol et."},
+{week:5,block:2,phase:"KONU ÇALIŞMA",subject:"Yatırım Kuruluşları",color:"#6ABF69",examWeek:false,topics:["Belge ve kayıt düzeni (Tebliğ III-45.1)","Kredili alım, açığa satış, ödünç alma/verme","Teminat oranları ve teminat tamamlama çağrısı","Kitle Fonlaması Tebliği (III-35/A.2)","Uzaktan Kimlik Tespiti Tebliği (III-42.1)","İlk deneme sınavı çöz + hata analizi"],dailyH:1,weekendH:3,tip:"Kredili alım oranları ve margin call kuralları sınavda sık çıkar."},
+{week:6,block:2,phase:"DENEME + SINAV",subject:"Yatırım Kuruluşları",color:"#6ABF69",examWeek:true,topics:["Özet kartları gözden geçir","Günde 2 deneme sınavı çöz","Çıkmış sınav sorularını çöz","Her denemeden sonra hata analizi","Zayıf konulara geri dön, tekrar et","📝 HAFTA SONU: SINAVA GİR"],dailyH:2,weekendH:4,tip:"Takas sınavını geçtin, motivasyon yüksek! Aynı tempoda devam et."},
+{week:7,block:3,phase:"KONU ÇALIŞMA",subject:"Sermaye Piyasası Araçları 1",color:"#4A9BD9",examWeek:false,topics:["Paylar ve pay benzeri menkul kıymetler","Pay Tebliği (VII-128.1) temel esasları","Halka arz süreci ve fiyat tespit raporu","İmtiyazlı pay, primli pay, bedelli/bedelsiz artırım","Borçlanma araçları — tahvil ve bono temelleri","Borçlanma Araçları Tebliği (VII-128.8)"],dailyH:1,weekendH:3,tip:"Halka arz sürecindeki süreler (6 ay satış yasağı, %10 ortaklık kuralı) sınavda sık çıkar."},
+{week:8,block:3,phase:"KONU ÇALIŞMA",subject:"Sermaye Piyasası Araçları 1",color:"#4A9BD9",examWeek:false,topics:["Yatırım fonu katılma payları (Tebliğ III-52.1)","Fon türleri ve yapıları","Türev araçlar — vadeli işlem ve opsiyon temelleri","Uzun/kısa pozisyon farkı","Kamu borçlanma araçları (DİBS, hazine bonosu)","İlk deneme sınavı çöz + hata analizi"],dailyH:1,weekendH:3,tip:"Türev araçlarda uzun/kısa pozisyon ve opsiyon hakkı/yükümlülük farkını iyi kavra."},
+{week:9,block:3,phase:"DENEME + SINAV",subject:"Sermaye Piyasası Araçları 1",color:"#4A9BD9",examWeek:true,topics:["Özet kartları gözden geçir","Günde 2 deneme sınavı çöz","Çıkmış sınav sorularını çöz","Her denemeden sonra hata analizi","Zayıf konulara geri dön, tekrar et","📝 HAFTA SONU: SINAVA GİR"],dailyH:2,weekendH:4,tip:"3 dersi geçtin, sadece mevzuat kaldı! Finish line yakın."},
+{week:10,block:4,phase:"KONU ÇALIŞMA",subject:"Dar Kapsamlı Mevzuat",color:"#E8A838",examWeek:false,topics:["Sermaye Piyasası Kanunu — temel kavramlar","İhraç, halka arz, izahname tanımları","SPK'nın görev ve yetkileri","İdari para cezaları ve yaptırımlar","Özel Durumlar Tebliği (II-15.1)","Kurumsal Yönetim Tebliği (II-17.1)"],dailyH:1,weekendH:3,tip:"Diğer 3 dersten öğrendiklerin burada işine yarayacak — kavramlar tanıdık gelecek."},
+{week:11,block:4,phase:"KONU ÇALIŞMA",subject:"Dar Kapsamlı Mevzuat",color:"#E8A838",examWeek:false,topics:["Yatırım Fonlarına İlişkin Esaslar Tebliği (III-52.1)","TSPB Meslek Kuralları","Sermaye Piyasası Çalışanları Etik İlkeleri","Davranış kuralları ve yaptırımlar","İlk deneme sınavı çöz + hata analizi","Parasal eşikler ve süreleri tekrar et"],dailyH:1,weekendH:3,tip:"Tebliğ numaralarını değil, hangi tebliğ neyi düzenlediğini öğren. Etik ilkeleri küçümseme!"},
+{week:12,block:4,phase:"DENEME + SINAV",subject:"Dar Kapsamlı Mevzuat",color:"#E8A838",examWeek:true,topics:["Özet kartları gözden geçir","Günde 2 deneme sınavı çöz","Çıkmış sınav sorularını çöz","Her denemeden sonra hata analizi","Zayıf konulara geri dön, tekrar et","📝 HAFTA SONU: SINAVA GİR — SON DERS!"],dailyH:2,weekendH:4,tip:"Bu son ders! Sınavdan 1 gün önce hafif tekrar + dinlen. 4/4 bitiriyorsun, tebrikler!"}
+];
+const SUBJECTS=[
+{name:"Takas, Saklama ve Operasyon",icon:"🔄",color:"#D95B6A",q:25,weeks:"1-3",order:1,subs:["Temel Kavramlar","MKK Yönetmeliği","Kaydileştirme (II-13.1)","Merkezi Takas / CCP","Pay & Borçlanma Aracı Takası","Takasbank Teminat Yön."]},
+{name:"Yatırım Kuruluşları",icon:"🏦",color:"#6ABF69",q:25,weeks:"4-6",order:2,subs:["Yatırım Hizmetleri (III-37.1)","Kuruluş Esasları (III-39.1)","Belge/Kayıt Düzeni (III-45.1)","Kredili Alım / Açığa Satış","Kitle Fonlaması","Uzaktan Kimlik Tespiti"]},
+{name:"Sermaye Piyasası Araçları 1",icon:"📊",color:"#4A9BD9",q:25,weeks:"7-9",order:3,subs:["Paylar ve Pay Benzeri M.K.","Borçlanma Araçları","Yatırım Fonu Katılma Payları","Türev Araçlar","Kamu Borçlanma Araçları","Pay Tebliği (VII-128.1)"]},
+{name:"Dar Kapsamlı Mevzuat",icon:"⚖️",color:"#E8A838",q:25,weeks:"10-12",order:4,subs:["Sermaye Piyasası Kanunu","Özel Durumlar Tebliği","Kurumsal Yönetim Tebliği","Yatırım Fonları Tebliği","TSPB Meslek Kuralları","Etik İlkeler"]}
+];
+const RESOURCES=[
+{name:"SPL Resmi Çalışma Notları",url:"spl.com.tr",type:"Resmi",c:"#6ABF69"},
+{name:"Akademi Eğitim — Düzey 1 Kitabı",url:"akademiegitim.com.tr",type:"Kitap",c:"#4A9BD9"},
+{name:"SPL Eğitim Online Paket",url:"splegitim.com",type:"Online",c:"#E8A838"},
+{name:"Aktif Online — Çıkmış Sorular",url:"aktifonline.net",type:"Soru",c:"#D95B6A"}
+];
+const RULES=[{l:"Toplam Soru",v:"4 × 25 = 100"},{l:"Ders Başına Min.",v:"50 puan"},{l:"Genel Ort. Min.",v:"60 puan"},{l:"Negatif Puan",v:"Yok ✓"},{l:"Aynı Ders Tekrar",v:"Min. 60 gün"},{l:"Mezuniyet Şartı",v:"Min. 2 yıllık"}];
+const STEPS=["SPL resmi çalışma notlarını ana kaynak olarak kullan","Her konuyu okuduktan sonra özet kart (flashcard) çıkar","Her dersin 2. haftasında ilk deneme sınavını çöz","3. haftada günde 2 deneme çöz, hata analizi yap","Parasal eşikler, süreler ve oranları ezberle","Hafta sonu sınava gir, sonraki Pazartesi yeni derse başla"];
+
+let state={selWeek:0,tab:"plan",done:{}};
+function loadProgress(){try{const s=localStorage.getItem("spl_progress_v2");if(s)state.done=JSON.parse(s)}catch(e){}}
+function saveProgress(){try{localStorage.setItem("spl_progress_v2",JSON.stringify(state.done))}catch(e){}}
+function toggleTopic(wi,ti){const k=wi+"-"+ti;state.done[k]=!state.done[k];if(!state.done[k])delete state.done[k];saveProgress();render()}
+function weekProg(wi){const t=WEEKS[wi].topics.length;let d=0;for(let i=0;i<t;i++)if(state.done[wi+"-"+i])d++;return Math.round(d/t*100)}
+function overallProg(){let t=0,d=0;WEEKS.forEach((w,wi)=>{w.topics.forEach((_,ti)=>{t++;if(state.done[wi+"-"+ti])d++})});return t?Math.round(d/t*100):0}
+function blockProg(block){let t=0,d=0;WEEKS.forEach((w,wi)=>{if(w.block===block)w.topics.forEach((_,ti)=>{t++;if(state.done[wi+"-"+ti])d++})});return t?Math.round(d/t*100):0}
+
+function h(tag,attrs,...kids){const el=document.createElement(tag);if(attrs)Object.entries(attrs).forEach(([k,v])=>{if(k==="style"&&typeof v==="object")Object.assign(el.style,v);else if(k.startsWith("on"))el.addEventListener(k.slice(2).toLowerCase(),v);else if(k==="className")el.className=v;else if(k==="innerHTML")el.innerHTML=v;else el.setAttribute(k,v)});kids.flat(Infinity).forEach(c=>{if(c!=null)el.append(typeof c==="string"?document.createTextNode(c):c)});return el}
+
+function render(){
+const app=document.getElementById("app");app.innerHTML="";const ov=overallProg();const cw=WEEKS[state.selWeek];
+app.append(h("div",{className:"header"},h("div",{className:"header__badge",innerHTML:"SERMAYE PİYASASI LİSANSLAMA"}),h("h1",null,"SPL Düzey 1 — Hazırlık Planı"),h("p",null,"12 Hafta · 4 Ders · Ders Ders Sınav Stratejisi")));
+const progCard=h("div",{className:"card",style:{animationDelay:"0.1s"}});
+const progHead=h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"}});
+progHead.append(h("span",{style:{fontSize:"13px",fontWeight:600,color:"var(--text-muted)",letterSpacing:"1px",textTransform:"uppercase"}},"Genel İlerleme"),h("span",{style:{fontFamily:"'JetBrains Mono',monospace",fontSize:"28px",fontWeight:700,background:ov>=80?"linear-gradient(135deg,#6ABF69,#4AE04A)":ov>=50?"linear-gradient(135deg,#E8A838,#F0C060)":"linear-gradient(135deg,#C9D1D9,#8B949E)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}},"%"+ov));
+progCard.append(progHead);
+const track=h("div",{className:"prog-track"});track.append(h("div",{className:"prog-fill prog-fill--rainbow",style:{width:ov+"%"}}));progCard.append(track);
+const blocks=h("div",{className:"blocks"});
+[{b:1,l:"Takas/Saklama",i:"🔄",c:"#D95B6A",w:"H1-3"},{b:2,l:"Yat. Kuruluşları",i:"🏦",c:"#6ABF69",w:"H4-6"},{b:3,l:"SP Araçları 1",i:"📊",c:"#4A9BD9",w:"H7-9"},{b:4,l:"Mevzuat",i:"⚖️",c:"#E8A838",w:"H10-12"}].forEach(bl=>{
+const pp=blockProg(bl.b);const isActive=cw.block===bl.b;
+const box=h("div",{className:"block-box"+(isActive?" active":""),style:{borderColor:isActive?bl.c+"88":"transparent"},onClick:()=>{state.selWeek=(bl.b-1)*3;render()}});
+box.append(h("div",{className:"block-box__icon"},bl.i),h("div",{className:"block-box__label"},bl.w),h("div",{className:"block-box__val",style:{color:bl.c}},"%"+pp));
+blocks.append(box)});
+progCard.append(blocks);app.append(progCard);
+const tabs=h("div",{className:"tabs"});
+[{id:"plan",l:"📅 Haftalık Plan"},{id:"subjects",l:"📖 Dersler"},{id:"resources",l:"🔗 Kaynaklar"}].forEach(t=>{tabs.append(h("button",{className:"tab-btn"+(state.tab===t.id?" active":""),onClick:()=>{state.tab=t.id;render()}},t.l))});
+app.append(tabs);
+if(state.tab==="plan")renderPlan(app,cw);else if(state.tab==="subjects")renderSubjects(app);else renderResources(app);
+app.append(h("div",{className:"footer"},"SPL Düzey 1 Hazırlık Dashboard · Ders ders sınav stratejisi"))}
+
+function renderPlan(app,cw){
+const grid=h("div",{className:"week-grid"});
+WEEKS.forEach((w,i)=>{const pr=weekProg(i);const isActive=state.selWeek===i;
+const pill=h("div",{className:"week-pill"+(isActive?" active":""),style:{borderColor:isActive?w.color:"",background:isActive?w.color+"18":""},onClick:()=>{state.selWeek=i;render()}});
+const numEl=h("span",{className:"week-pill__num",style:{color:isActive?w.color:"var(--text-muted)"}});
+if(w.examWeek){numEl.style.fontSize="9px";numEl.textContent="📝"}else{numEl.textContent=String(i+1)}
+const barEl=h("div",{className:"week-pill__bar",style:{background:pr===100?"var(--green)":pr>0?w.color:"rgba(255,255,255,0.06)",opacity:pr===100?"1":pr>0?"0.6":"0.3"}});
+pill.append(numEl,barEl);grid.append(pill)});
+app.append(grid);
+const card=h("div",{className:"card card--accent",style:{"--accent":cw.color,borderLeftColor:cw.color}});
+if(cw.examWeek){const badge=h("div",{className:"exam-badge",style:{background:cw.color+"20",color:cw.color,border:"1px solid "+cw.color+"44"}});badge.append(h("span",null,"🎯"),h("span",null,"SINAV HAFTASI"));card.append(badge)}
+const head=h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}});
+const left=h("div",null,h("div",{style:{fontSize:"11px",fontWeight:700,letterSpacing:"2px",color:cw.color,textTransform:"uppercase",marginBottom:"4px"}},"BLOK "+cw.block+" · HAFTA "+cw.week+" — "+cw.phase),h("h2",{style:{fontSize:"22px",fontWeight:700,color:"var(--text-primary)"}},cw.subject));
+head.append(left,h("div",{style:{fontFamily:"'JetBrains Mono',monospace",fontSize:"24px",fontWeight:700,color:cw.color}},"%"+weekProg(state.selWeek)));
+card.append(head);
+const badges=h("div",{className:"time-badges"});
+badges.append(h("div",{className:"time-badge",innerHTML:"🕐 Hafta içi: günde <strong>"+cw.dailyH+" saat</strong>"}),h("div",{className:"time-badge",innerHTML:"📅 Hafta sonu: toplamda <strong>"+cw.weekendH+" saat</strong>"}));
+card.append(badges);
+const wi=state.selWeek;
+cw.topics.forEach((t,ti)=>{const done=!!state.done[wi+"-"+ti];
+const btn=h("div",{className:"topic-btn"+(done?" done":""),style:{background:done?cw.color+"10":"",borderColor:done?cw.color+"33":""},onClick:()=>toggleTopic(wi,ti)});
+btn.append(h("div",{className:"topic-btn__check",style:{background:done?cw.color:"transparent"}},done?"✓":""),h("span",{className:"topic-btn__text"},t));
+card.append(btn)});
+const tip=h("div",{className:"tip-box",style:{background:cw.color+"0A",border:"1px solid "+cw.color+"22"}});
+tip.append(h("span",{style:{fontSize:"16px",flexShrink:0,marginTop:"1px"}},"💡"),h("span",{innerHTML:"<strong style='color:"+cw.color+"'>İpucu:</strong> "+cw.tip}));
+card.append(tip);app.append(card)}
+
+function renderSubjects(app){
+SUBJECTS.forEach(s=>{const card=h("div",{className:"card card--accent subj-card",style:{"--accent":s.color,borderLeftColor:s.color}});
+const head=h("div",{className:"subj-card__head"});
+head.append(h("span",{className:"subj-card__icon"},s.icon),h("div",null,h("div",{className:"subj-card__name"},s.order+". "+s.name),h("div",{className:"subj-card__meta"},s.q+" soru · Hafta "+s.weeks+" · Minimum 50 puan")));
+card.append(head);const tg=h("div",{className:"subj-topics"});s.subs.forEach(t=>tg.append(h("div",{className:"subj-topic"},"• "+t)));card.append(tg);app.append(card)});
+const tc=h("div",{className:"card",style:{background:"linear-gradient(135deg, rgba(78,130,200,0.08), rgba(22,27,34,0.95))",border:"1px solid rgba(78,130,200,0.15)"}});
+tc.append(h("h3",{style:{fontSize:"16px",fontWeight:700,color:"var(--text-primary)",marginBottom:"14px"}},"🗓️ Sınav Takvimi"));
+[{w:"Hafta 3",s:"Takas/Saklama Sınavı",c:"#D95B6A"},{w:"Hafta 6",s:"Yatırım Kuruluşları Sınavı",c:"#6ABF69"},{w:"Hafta 9",s:"SP Araçları 1 Sınavı",c:"#4A9BD9"},{w:"Hafta 12",s:"Mevzuat Sınavı (Son!)",c:"#E8A838"}].forEach(e=>{
+tc.append(h("div",{style:{display:"flex",alignItems:"center",gap:"12px",padding:"10px 12px",background:"rgba(255,255,255,0.02)",borderRadius:"8px",marginBottom:"6px",borderLeft:"3px solid "+e.c}},
+h("span",{style:{fontFamily:"'JetBrains Mono',monospace",fontSize:"12px",fontWeight:700,color:e.c,minWidth:"60px"}},e.w),h("span",{style:{fontSize:"13px",color:"var(--text-secondary)"}},e.s)))});
+app.append(tc);
+const rc=h("div",{className:"card",style:{background:"linear-gradient(135deg, rgba(78,130,200,0.1), rgba(22,27,34,0.95))",border:"1px solid rgba(78,130,200,0.2)"}});
+rc.append(h("h3",{style:{fontSize:"16px",fontWeight:700,color:"var(--text-primary)",marginBottom:"14px"}},"📋 Sınav Kuralları Özet"));
+const rg=h("div",{className:"rules-grid"});RULES.forEach(r=>{rg.append(h("div",{className:"rule-box"},h("div",{className:"rule-box__label"},r.l),h("div",{className:"rule-box__val"},r.v)))});
+rc.append(rg);app.append(rc)}
+
+function renderResources(app){
+RESOURCES.forEach(r=>{const row=h("div",{className:"res-row"});row.append(h("div",null,h("div",{className:"res-row__name"},r.name),h("div",{className:"res-row__url"},r.url)),h("span",{className:"res-badge",style:{background:r.c+"22",color:r.c}},r.type));app.append(row)});
+const sc=h("div",{className:"card",style:{border:"1px solid rgba(232,168,56,0.15)"}});
+sc.append(h("h3",{style:{fontSize:"16px",fontWeight:700,color:"var(--text-primary)",marginBottom:"14px"}},"🎯 Ders Ders Sınav Stratejisi"));
+STEPS.forEach((s,i)=>{sc.append(h("div",{className:"step-row"},h("span",{className:"step-num"},String(i+1)),h("span",{className:"step-text"},s)))});
+app.append(sc)}
+
+loadProgress();render();
+</script>
+</body>
+</html>
